@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Road 查詢系統</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 15px;
+    background: #f5f5f5;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.result {
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.number {
+    font-weight: bold;
+    color: #007bff;
+}
+
+@media (min-width: 768px) {
+    body {
+        padding: 40px;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>Road 查詢</h2>
+    <input type="text" id="search" placeholder="請輸入 Road 關鍵字...">
+    <div id="results"></div>
+</div>
+
+
+</body>
+</html>
