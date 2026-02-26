@@ -101,7 +101,7 @@ searchInput.addEventListener('input', function() {
     if (!keyword) return;
 
     const filtered = data.filter(item =>
-        item.road.toLowerCase().includes(keyword)
+        item.road.toLowerCase().startsWith(keyword)
     );
 
     if (filtered.length === 0) {
