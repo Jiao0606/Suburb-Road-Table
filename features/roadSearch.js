@@ -52,7 +52,7 @@ searchInput.addEventListener('input', function() {
     );
 
     if (filtered.length === 0) {
-        resultsDiv.innerHTML = `<div class="no-result">沒有找到資料</div>`;
+        resultsDiv.innerHTML = `<div class="no-result">No results found</div>`;
         return;
     }
 
