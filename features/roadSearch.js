@@ -16,7 +16,7 @@ document.getElementById('backBtn').addEventListener('click', () => {
     if (document.referrer) {
         history.back();
     } else {
-        window.location.href = 'suburb search.html';
+        window.location.href = 'index.html';
     }
 });
 
