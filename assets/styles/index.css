@@ -15,46 +15,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-input {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-}
-
-.result {
-    background: #fff;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    transition: 0.2s;
-}
-
-.result:hover {
-    transform: scale(1.02);
-}
-
-.number {
-    font-weight: bold;
-    color: #0066ff;
-    font-size: 18px;
-}
-
-.road {
-    color: #333;
-    margin-top: 4px;
-}
-
-.no-result {
-    text-align: center;
-    color: #999;
-    margin-top: 20px;
-}
-
 @media (min-width: 768px) {
     body {
         padding: 40px;

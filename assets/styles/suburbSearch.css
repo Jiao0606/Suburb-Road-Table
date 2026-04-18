@@ -1,0 +1,23 @@
+.suburb-btn {
+    width: 46%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background: #fff;
+    margin: 10px 2%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: 0.2s;
+}
+
+.suburb-btn:hover {
+    transform: scale(1.02);
+}
+
+.suburb-text {
+    font-weight: bold;
+    color: #333;
+    font-size: 18px;
+    margin-top: 4px;
+}
