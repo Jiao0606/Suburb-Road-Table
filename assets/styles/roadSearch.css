@@ -26,6 +26,7 @@
     opacity: 0.5;
 }
 
+
 /* 標題 */
 .header h2 {
     flex: 1;
@@ -33,7 +34,7 @@
 
 /* 內容往下推（避免被 header 擋住） */
 .container {
-    padding: 50px 12px 12px;
+    padding: 75px 12px 12px;
 }
 
 input {
