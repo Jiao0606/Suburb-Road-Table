@@ -1,6 +1,6 @@
 const suburbListDiv = document.getElementById('suburbList');
 
-fetch('./data/Suburb.json')
+fetch('/Suburb-Road-Table/data/Suburb.json')
     .then(res => res.json())
     .then(json => {
 
