@@ -20,6 +20,12 @@ document.getElementById('backBtn').addEventListener('click', () => {
     }
 });
 
+// 清除搜尋框內容
+document.getElementById('clearBtn').addEventListener('click', () => {
+    document.getElementById('search').value = '';
+    document.getElementById('results').innerHTML = '';
+});
+
 // 取得對應Suburb之Data，並根據輸入的Road關鍵字進行搜尋
 let data = [];
 
@@ -46,7 +52,7 @@ searchInput.addEventListener('input', function() {
     );
 
     if (filtered.length === 0) {
-        resultsDiv.innerHTML = `<div class="no-result">No results found</div>`;
+        resultsDiv.innerHTML = `<div class="no-result">沒有找到資料</div>`;
         return;
     }
 

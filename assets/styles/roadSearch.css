@@ -26,6 +26,16 @@
     opacity: 0.5;
 }
 
+/* 清除按鈕 */
+#clearBtn {
+    width: 8%;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: #ddd;
+    font-size: 18px;
+    cursor: pointer;
+}
 
 /* 標題 */
 .header h2 {
@@ -34,11 +44,11 @@
 
 /* 內容往下推（避免被 header 擋住） */
 .container {
-    padding: 75px 12px 12px;
+    padding: 50px 12px 12px;
 }
 
 input {
-    width: 100%;
+    width: 91%;
     padding: 14px;
     font-size: 16px;
     border-radius: 12px;
