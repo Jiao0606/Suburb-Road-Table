@@ -20,6 +20,12 @@ document.getElementById('backBtn').addEventListener('click', () => {
     }
 });
 
+// 清除搜尋框內容
+document.getElementById('clearBtn').addEventListener('click', () => {
+    document.getElementById('search').value = '';
+    document.getElementById('results').innerHTML = '';
+});
+
 // 取得對應Suburb之Data，並根據輸入的Road關鍵字進行搜尋
 let data = [];
 
@@ -58,5 +64,25 @@ searchInput.addEventListener('input', function() {
             <div class="road">${item.road}</div>
         `;
         resultsDiv.appendChild(div);
+    });
+});
+
+// 回到頁面頂部功能
+const topBtn = document.getElementById('topBtn');
+
+// 滾動時顯示 / 隱藏
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 200) {
+        topBtn.style.display = 'block';
+    } else {
+        topBtn.style.display = 'none';
+    }
+});
+
+// 點擊回到頂部
+topBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
     });
 });
