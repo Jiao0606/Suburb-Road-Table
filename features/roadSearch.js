@@ -66,3 +66,23 @@ searchInput.addEventListener('input', function() {
         resultsDiv.appendChild(div);
     });
 });
+
+// 回到頁面頂部功能
+const topBtn = document.getElementById('topBtn');
+
+// 滾動時顯示 / 隱藏
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 200) {
+        topBtn.style.display = 'block';
+    } else {
+        topBtn.style.display = 'none';
+    }
+});
+
+// 點擊回到頂部
+topBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});

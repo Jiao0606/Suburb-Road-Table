@@ -86,3 +86,28 @@ input {
     color: #999;
     margin-top: 20px;
 }
+
+/* 回到頂部按鈕 */
+#topBtn {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: #333;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: none; /* 預設隱藏 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+#topBtn:hover {
+    transform: scale(1.1);
+}
+
+#topBtn {
+    transition: 0.2s;
+}
