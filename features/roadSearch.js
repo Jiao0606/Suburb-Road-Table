@@ -1,9 +1,32 @@
+// 取得所選Suburb，並根據Suburb調整Title內容
+const params = new URLSearchParams(window.location.search);
+const suburb = params.get('suburb');
+
+const title = document.getElementById('title');
+
+if (suburb) {
+    title.textContent = `${suburb} - Select Road`;
+}
+else if (!suburb) {
+    title.textContent = "No Suburb Selected";
+}
+
+// 返回功能
+document.getElementById('backBtn').addEventListener('click', () => {
+    if (document.referrer) {
+        history.back();
+    } else {
+        window.location.href = 'suburb search.html';
+    }
+});
+
+// 取得對應Suburb之Data，並根據輸入的Road關鍵字進行搜尋
 let data = [];
 
-fetch('../data/Area.json')
+fetch('../data/Suburb.json')
     .then(res => res.json())
     .then(json => {
-        data = json.Success;
+        data = json[suburb] || [];
     })
     .catch(err => {
         console.error("JSON 讀取失敗:", err);
