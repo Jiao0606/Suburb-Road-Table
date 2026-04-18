@@ -23,7 +23,7 @@ document.getElementById('backBtn').addEventListener('click', () => {
 // 取得對應Suburb之Data，並根據輸入的Road關鍵字進行搜尋
 let data = [];
 
-fetch('/Suburb-Road-Table/data/Suburb.json')
+fetch('./data/Suburb.json')
     .then(res => res.json())
     .then(json => {
         data = json[suburb] || [];
