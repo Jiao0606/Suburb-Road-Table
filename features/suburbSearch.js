@@ -1,6 +1,6 @@
 const suburbListDiv = document.getElementById('suburbList');
 
-fetch('/Suburb-Road-Table/data/Suburb.json')
+fetch('./data/Suburb.json')
     .then(res => res.json())
     .then(json => {
 
@@ -20,7 +20,7 @@ fetch('/Suburb-Road-Table/data/Suburb.json')
 
             // 點擊後跳轉並帶參數
             btn.addEventListener('click', () => {
-                window.location.href = `road search.html?suburb=${encodeURIComponent(suburb)}`;
+                window.location.href = `road-search.html?suburb=${encodeURIComponent(suburb)}`;
             });
 
             suburbListDiv.appendChild(btn);
