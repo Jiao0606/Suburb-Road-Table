@@ -1,1 +1,8 @@
+# Excel 檔案
 *.xlsx
+
+# JSON 全部忽略
+/data/*.json
+
+# 例外：保留主檔
+/!data/Suburb.json
