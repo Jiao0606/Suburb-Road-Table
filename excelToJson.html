@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>Excel → Suburb JSON</title>
+
+<!-- XLSX 讀 Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+body {
+    font-family: sans-serif;
+    padding: 20px;
+    background: #f5f6fa;
+}
+
+/* 拖曳區 */
+.drop-zone {
+    border: 2px dashed #aaa;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+/* 按鈕 */
+button {
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* 輸出區 */
+pre {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    max-height: 400px;
+    overflow: auto;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📊 Excel → Suburb JSON</h2>
+
+<div class="drop-zone" id="dropZone">
+    拖曳 Excel 檔案到這裡<br>或點擊選擇
+    <input type="file" id="fileInput" hidden>
+</div>
+
+<button onclick="downloadJSON()">下載 JSON</button>
+
+<pre id="output">尚未載入資料</pre>
+
+<script>
+let jsonResult = {};
+
+// 點擊選檔
+document.getElementById('dropZone').addEventListener('click', () => {
+    document.getElementById('fileInput').click();
+});
+
+// 拖曳事件
+const dropZone = document.getElementById('dropZone');
+
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.style.background = '#eef';
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.style.background = '#fff';
+});
+
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.style.background = '#fff';
+    const file = e.dataTransfer.files[0];
+    handleFile(file);
+});
+
+// 選檔
+document.getElementById('fileInput').addEventListener('change', e => {
+    handleFile(e.target.files[0]);
+});
+
+// 核心：處理 Excel
+function handleFile(file) {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        let finalResult = {};
+
+        // 每個工作表 = 一個 suburb
+        workbook.SheetNames.forEach(sheetName => {
+
+            const sheet = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+            let suburbData = [];
+
+            rows.forEach(row => {
+
+                // 每兩欄為一筆資料
+                for (let i = 0; i < row.length; i += 2) {
+                    const number = row[i];
+                    const road = row[i + 1];
+
+                    if (number && road) {
+                        suburbData.push({
+                            number: String(number).trim(),
+                            road: String(road).trim()
+                        });
+                    }
+                }
+
+            });
+
+            // 排序（依 number A-Z >> 1-10）
+            suburbData.sort((a, b) =>
+                String(a.number).localeCompare(String(b.number), undefined, {
+                    numeric: true,
+                    sensitivity: 'base'
+                })
+            );
+
+            finalResult[sheetName] = suburbData;
+        });
+
+        Object.keys(finalResult).forEach(key => {
+            if (
+                Array.isArray(finalResult[key]) &&
+                finalResult[key].length === 0
+            ) {
+                delete finalResult[key];
+            }
+        });
+
+        jsonResult = finalResult;
+
+        document.getElementById('output').textContent =
+            JSON.stringify(jsonResult, null, 2);
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+// 下載 JSON
+function downloadJSON() {
+    if (!Object.keys(jsonResult).length) {
+        alert('沒有資料');
+        return;
+    }
+
+    const blob = new Blob(
+        [JSON.stringify(jsonResult, null, 2)],
+        { type: 'application/json' }
+    );
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Suburb.json';
+    a.click();
+}
+</script>
+
+</body>
+</html>
