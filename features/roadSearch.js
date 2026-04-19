@@ -1,5 +1,6 @@
 // 取得所選Suburb，並根據Suburb調整Title內容
 const params = new URLSearchParams(window.location.search);
+const area = params.get('area');
 const suburb = params.get('suburb');
 
 const title = document.getElementById('title');
@@ -16,7 +17,7 @@ document.getElementById('backBtn').addEventListener('click', () => {
     if (document.referrer) {
         history.back();
     } else {
-        window.location.href = 'index.html';
+        window.location.href = `./data/${area}_Suburb.json`;
     }
 });
 
@@ -29,7 +30,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
 // 取得對應Suburb之Data，並根據輸入的Road關鍵字進行搜尋
 let data = [];
 
-fetch('./data/Suburb.json')
+fetch(`./data/${area}_Suburb.json`)
     .then(res => res.json())
     .then(json => {
         data = json[suburb] || [];
