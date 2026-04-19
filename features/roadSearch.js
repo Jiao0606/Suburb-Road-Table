@@ -5,7 +5,7 @@ const suburb = params.get('suburb');
 const title = document.getElementById('title');
 
 if (suburb) {
-    title.textContent = `${suburb} - Select Road`;
+    title.textContent = `${suburb}`;
 }
 else if (!suburb) {
     title.textContent = "No Suburb Selected";
