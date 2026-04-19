@@ -32,6 +32,36 @@ button {
     margin-right: 10px;
 }
 
+/* ===== tab 容器 ===== */
+.env-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* ===== tab 按鈕 ===== */
+.env-tab {
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 14px;
+}
+
+/* hover */
+.env-tab:hover {
+    border-color: #4a90e2;
+}
+
+/* active 狀態 */
+.env-tab.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
 /* 輸出區 */
 pre {
     background: #fff;
@@ -48,6 +78,11 @@ pre {
 
 <h2>Excel to Suburb JSON</h2>
 
+<div class="env-tabs">
+    <button class="env-tab" data-env="948">948</button>
+    <button class="env-tab" data-env="PK">PK</button>
+</div>
+
 <div class="drop-zone" id="dropZone">
     拖曳 Excel 檔案到這裡<br>或點擊選擇
     <input type="file" id="fileInput" hidden>
@@ -58,23 +93,52 @@ pre {
 <pre id="output">尚未載入資料</pre>
 
 <script>
+let ENV = localStorage.getItem('ENV');
 let jsonResult = {};
 
-fetch('./data/Suburb.json')
-    .then(res => res.json())
-    .then(oldData => {
-        jsonResult = oldData;
-    })
-    .catch(() => {
-        jsonResult = {}; // 沒有就空物件
-    });
+// ===== 載入資料 =====
+function loadData() {
+    fetch(`./data/${ENV}_Suburb.json`)
+        .then(res => res.json())
+        .then(data => {
+            jsonResult = data;
+            document.getElementById('output').textContent =
+                JSON.stringify(jsonResult, null, 2);
+        })
+        .catch(() => {
+            jsonResult = {};
+        });
+}
 
+loadData();
+
+
+// ===== tab 切換 =====
+document.querySelectorAll('.env-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        ENV = btn.dataset.env;
+
+        // UI active 切換
+        document.querySelectorAll('.env-tab')
+            .forEach(b => b.classList.remove('active'));
+
+        btn.classList.add('active');
+
+        // 重新載入
+        loadData();
+    });
+});
+
+// =========================
 // 點擊選檔
+// =========================
 document.getElementById('dropZone').addEventListener('click', () => {
     document.getElementById('fileInput').click();
 });
 
+// =========================
 // 拖曳事件
+// =========================
 const dropZone = document.getElementById('dropZone');
 
 dropZone.addEventListener('dragover', e => {
@@ -93,12 +157,16 @@ dropZone.addEventListener('drop', e => {
     handleFile(file);
 });
 
+// =========================
 // 選檔
+// =========================
 document.getElementById('fileInput').addEventListener('change', e => {
     handleFile(e.target.files[0]);
 });
 
-// 處理 Excel
+// =========================
+// Excel 處理
+// =========================
 function handleFile(file) {
     if (!file) return;
 
@@ -140,9 +208,6 @@ function handleFile(file) {
                 })
             );
 
-            // =========================
-            // KEY 正規化比對
-            // =========================
             const oldKeys = Object.keys(oldResult);
 
             const matchedKey = oldKeys.find(
@@ -173,19 +238,15 @@ function handleFile(file) {
                 }
             }
 
-            // =========================
-            // 移除舊 key + 更新
-            // =========================
             if (isChanged) {
                 if (matchedKey) {
-                    delete newResult[matchedKey]; // 移除舊 suburb（不論大小寫）
+                    delete newResult[matchedKey];
                 }
 
-                newResult[sheetName] = suburbData; // 用新名稱覆蓋
+                newResult[sheetName] = suburbData;
             }
         });
 
-        // 清空空資料
         Object.keys(newResult).forEach(key => {
             if (Array.isArray(newResult[key]) &&
                 newResult[key].length === 0) {
@@ -202,7 +263,9 @@ function handleFile(file) {
     reader.readAsArrayBuffer(file);
 }
 
-// 下載 JSON
+// =========================
+// 下載 JSON（已環境化）
+// =========================
 function downloadJSON() {
     if (!Object.keys(jsonResult).length) return;
 
@@ -216,34 +279,31 @@ function downloadJSON() {
 
     const json = JSON.stringify(jsonResult, null, 2);
 
-    // ======================
+    const baseName = `${ENV}_Suburb.json`;
+    const backupName = `${ENV}_Suburb_${dateStr}.json`;
+
     // 主檔
-    // ======================
     const blob1 = new Blob([json], { type: 'application/json' });
     const url1 = URL.createObjectURL(blob1);
 
     const a1 = document.createElement('a');
     a1.href = url1;
-    a1.download = 'Suburb.json';
+    a1.download = baseName;
     a1.click();
 
     URL.revokeObjectURL(url1);
 
-    // ======================
-    // 備份檔
-    // ======================
+    // 備份
     setTimeout(() => {
-
         const blob2 = new Blob([json], { type: 'application/json' });
         const url2 = URL.createObjectURL(blob2);
 
         const a2 = document.createElement('a');
         a2.href = url2;
-        a2.download = `Suburb_${dateStr}.json`;
+        a2.download = backupName;
         a2.click();
 
         URL.revokeObjectURL(url2);
-
     }, 300);
 }
 </script>
