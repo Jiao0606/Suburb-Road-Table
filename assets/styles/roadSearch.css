@@ -129,3 +129,44 @@ input {
 #topBtn {
     transition: 0.2s;
 }
+
+.number {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* 數字 */
+.number-only {
+    color: #0066ff;
+}
+
+/* A-Z 顏色 */
+.letter-A { color:#ff6b6b }
+.letter-B { color:#f7b731 }
+.letter-C { color:#20bf6b }
+.letter-D { color:#0fb9b1 }
+.letter-E { color:#2d98da }
+.letter-F { color:#3867d6 }
+.letter-G { color:#8854d0 }
+.letter-H { color:#a55eea }
+.letter-I { color:#eb3b5a }
+.letter-J { color:#fa8231 }
+.letter-K { color:#fd9644 }
+.letter-L { color:#fed330 }
+.letter-M { color:#26de81 }
+.letter-N { color:#45aaf2 }
+.letter-O { color:#4b7bec }
+.letter-P { color:#a55eea }
+.letter-Q { color:#d1d8e0 }
+.letter-R { color:#778ca3 }
+.letter-S { color:#e55039 }
+.letter-T { color:#fa983a }
+.letter-U { color:#78e08f }
+.letter-V { color:#60a3bc }
+.letter-W { color:#82ccdd }
+.letter-X { color:#b8e994 }
+.letter-Y { color:#f8c291 }
+.letter-Z { color:#e77f67 }

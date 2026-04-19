@@ -17,7 +17,7 @@ document.getElementById('backBtn').addEventListener('click', () => {
     if (document.referrer) {
         history.back();
     } else {
-        window.location.href = `./data/${area}_Suburb.json`;
+        window.location.href = `suburb-search.html?area=${area}`;
     }
 });
 
@@ -60,10 +60,20 @@ searchInput.addEventListener('input', function() {
     filtered.forEach(item => {
         const div = document.createElement('div');
         div.className = 'result';
+
+        // 🔥 取第一個字元
+        const firstChar = item.number.charAt(0).toUpperCase();
+
+        // 🔥 判斷是否為字母
+        const isLetter = /^[A-Za-z]/.test(item.number);
+
         div.innerHTML = `
-            <div class="number">${item.number}</div>
+            <div class="number ${isLetter ? `letter-${firstChar}` : 'number-only'}">
+                ${item.number}
+            </div>
             <div class="road">${item.road}</div>
         `;
+
         resultsDiv.appendChild(div);
     });
 });
@@ -87,3 +97,4 @@ topBtn.addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
+
