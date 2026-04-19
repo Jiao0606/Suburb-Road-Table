@@ -7,13 +7,24 @@ const area = params.get('area');
 document.getElementById('title').textContent =`${area}`;
 
 fetch(`./data/${area}_Suburb.json`)
-    .then(res => res.json())
+    .then(res => {
+        // 🔍 先檢查 HTTP 狀態
+        if (!res.ok) {
+            throw new Error(`HTTP 錯誤: ${res.status}`);
+        }
+
+        // 🔍 檢查是不是 JSON
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("回傳不是 JSON（可能是 404 HTML）");
+        }
+
+        return res.json();
+    })
     .then(json => {
 
-        // 取得 suburb key
         let suburbs = Object.keys(json);
 
-        // A-Z 排序
         suburbs.sort((a, b) => a.localeCompare(b));
 
         suburbs.forEach(suburb => {
@@ -25,7 +36,6 @@ fetch(`./data/${area}_Suburb.json`)
                 <div class="suburb-text">${suburb}</div>
             `;
 
-            // 帶 area + suburb
             btn.addEventListener('click', () => {
                 window.location.href =
                     `road-search.html?area=${area}&suburb=${encodeURIComponent(suburb)}`;
@@ -36,6 +46,14 @@ fetch(`./data/${area}_Suburb.json`)
     })
     .catch(err => {
         console.error("讀取失敗:", err);
+
+        // 👇 顯示錯誤在畫面上
+        suburbListDiv.innerHTML = `
+            <div class="no-result">
+                JSON 載入失敗<br>
+                ${err.message}
+            </div>
+        `;
     });
 
 
