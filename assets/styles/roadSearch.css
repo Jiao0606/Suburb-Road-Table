@@ -11,6 +11,16 @@
     border-bottom: 1px solid #eee;
     z-index: 1000;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+    position: relative;
+}
+
+/* 標題 → 絕對置中 */
+.header h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
 }
 
 /* 返回按鈕 */
@@ -20,6 +30,7 @@
     background: none;
     border: none;
     cursor: pointer;
+    z-index: 1;
 }
 
 #backBtn:active {
