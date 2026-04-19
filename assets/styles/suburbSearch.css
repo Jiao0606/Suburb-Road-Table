@@ -1,5 +1,39 @@
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* 標題 */
+.header h2 {
+    flex: 1;
+}
+
+/* 返回按鈕 */
+#backBtn {
+    margin-left: 10px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* 內容往下推（避免被 header 擋住） */
+.container {    
+    padding: 75px 12px;
+}
+
 .suburb-btn {
-    width: 46%;
+    width: calc(48% - 4%);
     padding: 14px;
     font-size: 16px;
     border-radius: 12px;
