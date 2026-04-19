@@ -55,7 +55,7 @@
 
 /* 內容往下推（避免被 header 擋住） */
 .container {    
-    padding: 40px 12px;
+    padding: 0px 12px;
 }
 
 #search-container {
