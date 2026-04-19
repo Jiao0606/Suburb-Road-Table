@@ -46,7 +46,7 @@ pre {
 
 <body>
 
-<h2>📊 Excel → Suburb JSON</h2>
+<h2>Excel to Suburb JSON</h2>
 
 <div class="drop-zone" id="dropZone">
     拖曳 Excel 檔案到這裡<br>或點擊選擇
@@ -59,6 +59,15 @@ pre {
 
 <script>
 let jsonResult = {};
+
+fetch('./data/Suburb.json')
+    .then(res => res.json())
+    .then(oldData => {
+        jsonResult = oldData;
+    })
+    .catch(() => {
+        jsonResult = {}; // 沒有就空物件
+    });
 
 // 點擊選檔
 document.getElementById('dropZone').addEventListener('click', () => {
@@ -89,7 +98,7 @@ document.getElementById('fileInput').addEventListener('change', e => {
     handleFile(e.target.files[0]);
 });
 
-// 核心：處理 Excel
+// 處理 Excel
 function handleFile(file) {
     if (!file) return;
 
@@ -99,9 +108,11 @@ function handleFile(file) {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
 
-        let finalResult = {};
+        let oldResult = jsonResult || {};
+        let newResult = { ...oldResult };
 
-        // 每個工作表 = 一個 suburb
+        const normalize = (str) => str.trim().toLowerCase();
+
         workbook.SheetNames.forEach(sheetName => {
 
             const sheet = workbook.Sheets[sheetName];
@@ -110,8 +121,6 @@ function handleFile(file) {
             let suburbData = [];
 
             rows.forEach(row => {
-
-                // 每兩欄為一筆資料
                 for (let i = 0; i < row.length; i += 2) {
                     const number = row[i];
                     const road = row[i + 1];
@@ -123,30 +132,68 @@ function handleFile(file) {
                         });
                     }
                 }
-
             });
 
-            // 排序（依 number A-Z >> 1-10）
             suburbData.sort((a, b) =>
                 String(a.number).localeCompare(String(b.number), undefined, {
-                    numeric: true,
-                    sensitivity: 'base'
+                    numeric: true
                 })
             );
 
-            finalResult[sheetName] = suburbData;
-        });
+            // =========================
+            // KEY 正規化比對
+            // =========================
+            const oldKeys = Object.keys(oldResult);
 
-        Object.keys(finalResult).forEach(key => {
-            if (
-                Array.isArray(finalResult[key]) &&
-                finalResult[key].length === 0
-            ) {
-                delete finalResult[key];
+            const matchedKey = oldKeys.find(
+                k => normalize(k) === normalize(sheetName)
+            );
+
+            const oldData = matchedKey ? oldResult[matchedKey] : null;
+
+            let isChanged = false;
+
+            if (!oldData) {
+                isChanged = true;
+            } else if (oldData.length !== suburbData.length) {
+                isChanged = true;
+            } else {
+                for (let i = 0; i < suburbData.length; i++) {
+                    const old = oldData[i];
+                    const now = suburbData[i];
+
+                    if (
+                        !old ||
+                        old.number !== now.number ||
+                        old.road !== now.road
+                    ) {
+                        isChanged = true;
+                        break;
+                    }
+                }
+            }
+
+            // =========================
+            // 移除舊 key + 更新
+            // =========================
+            if (isChanged) {
+                if (matchedKey) {
+                    delete newResult[matchedKey]; // 移除舊 suburb（不論大小寫）
+                }
+
+                newResult[sheetName] = suburbData; // 用新名稱覆蓋
             }
         });
 
-        jsonResult = finalResult;
+        // 清空空資料
+        Object.keys(newResult).forEach(key => {
+            if (Array.isArray(newResult[key]) &&
+                newResult[key].length === 0) {
+                delete newResult[key];
+            }
+        });
+
+        jsonResult = newResult;
 
         document.getElementById('output').textContent =
             JSON.stringify(jsonResult, null, 2);
@@ -157,20 +204,47 @@ function handleFile(file) {
 
 // 下載 JSON
 function downloadJSON() {
-    if (!Object.keys(jsonResult).length) {
-        alert('沒有資料');
-        return;
-    }
+    if (!Object.keys(jsonResult).length) return;
 
-    const blob = new Blob(
-        [JSON.stringify(jsonResult, null, 2)],
-        { type: 'application/json' }
-    );
+    const now = new Date();
+    const dateStr =
+        now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, '0') +
+        String(now.getDate()).padStart(2, '0') + '_' +
+        String(now.getHours()).padStart(2, '0') +
+        String(now.getMinutes()).padStart(2, '0');
 
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'Suburb.json';
-    a.click();
+    const json = JSON.stringify(jsonResult, null, 2);
+
+    // ======================
+    // 主檔
+    // ======================
+    const blob1 = new Blob([json], { type: 'application/json' });
+    const url1 = URL.createObjectURL(blob1);
+
+    const a1 = document.createElement('a');
+    a1.href = url1;
+    a1.download = 'Suburb.json';
+    a1.click();
+
+    URL.revokeObjectURL(url1);
+
+    // ======================
+    // 備份檔
+    // ======================
+    setTimeout(() => {
+
+        const blob2 = new Blob([json], { type: 'application/json' });
+        const url2 = URL.createObjectURL(blob2);
+
+        const a2 = document.createElement('a');
+        a2.href = url2;
+        a2.download = `Suburb_${dateStr}.json`;
+        a2.click();
+
+        URL.revokeObjectURL(url2);
+
+    }, 300);
 }
 </script>
 
