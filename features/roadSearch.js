@@ -49,15 +49,19 @@ searchInput.addEventListener('input', function() {
     if (!keyword) return;
 
     const filtered = data.filter(item => {
+        const road = item.road.toLowerCase();
 
-        // 合併 number + road
-        const fullText = `${item.number} ${item.road}`.toLowerCase();
+        // number 清掉符號
+        const cleanNumber = item.number
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '');
 
-        // 移除開頭的數字 + 符號（例如 55-57、12A、3/5）
-        const cleanText = fullText.replace(/^[^a-zA-Z]+/, '');
+        const keywordClean = keyword.replace(/[^a-z0-9]/g, '');
 
-        // 比對 road
-        return cleanText.startsWith(keyword);
+        return (
+            road.includes(keyword) ||
+            cleanNumber.includes(keywordClean)
+        );
     });
 
     if (filtered.length === 0) {
