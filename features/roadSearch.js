@@ -48,9 +48,17 @@ searchInput.addEventListener('input', function() {
 
     if (!keyword) return;
 
-    const filtered = data.filter(item =>
-        item.road.toLowerCase().startsWith(keyword)
-    );
+    const filtered = data.filter(item => {
+
+        // 合併 number + road
+        const fullText = `${item.number} ${item.road}`.toLowerCase();
+
+        // 移除開頭的數字 + 符號（例如 55-57、12A、3/5）
+        const cleanText = fullText.replace(/^[^a-zA-Z]+/, '');
+
+        // 比對 road
+        return cleanText.startsWith(keyword);
+    });
 
     if (filtered.length === 0) {
         resultsDiv.innerHTML = `<div class="no-result">No results found</div>`;
@@ -61,10 +69,7 @@ searchInput.addEventListener('input', function() {
         const div = document.createElement('div');
         div.className = 'result';
 
-        // 🔥 取第一個字元
         const firstChar = item.number.charAt(0).toUpperCase();
-
-        // 🔥 判斷是否為字母
         const isLetter = /^[A-Za-z]/.test(item.number);
 
         div.innerHTML = `
